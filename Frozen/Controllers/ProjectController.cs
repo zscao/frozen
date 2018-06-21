@@ -25,6 +25,7 @@ namespace Frozen.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<Project>> List(int pageIndex)
         {
+            await Task.Delay(2000);
             return await _service.List(pageIndex);
         }
 
@@ -32,6 +33,7 @@ namespace Frozen.Controllers
         [HttpGet("Detail/{id}", Name = "GetById")]
         public async Task<ActionResult<Project>>GetById(int id)
         {
+            await Task.Delay(2000);
             var result = await _service.GetById(id);
             if (result == null) return NotFound();
 
@@ -41,6 +43,7 @@ namespace Frozen.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult<Project>> Create(ProjectModel project)
         {
+            await Task.Delay(2000);
             var result = await _service.Create(project);
 
             return CreatedAtRoute("GetById", new { id = result.Id }, result);

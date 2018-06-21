@@ -2,19 +2,14 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { createLoadingSelector } from '../store/Loading';
 import { actionCreators } from '../store/Project';
+import { actions as projectActions } from '../store/Project';
 
 class ListProject extends Component {
   componentWillMount() {
     // This method runs when the component is first added to the page
-    const pageIndex = parseInt(this.props.match.params.pageIndex, 10) || 0;
-    this.props.requestProjectList(pageIndex);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // This method runs when incoming props (e.g., route params) change
-    const pageIndex = parseInt(nextProps.match.params.pageIndex, 10) || 0;
-    this.props.requestProjectList(pageIndex);
+    this.props.requestProjectList();
   }
 
   render() {
@@ -70,7 +65,9 @@ function renderPagination(props) {
   </p>;
 }
 
+const loadingSelector = createLoadingSelector([projectActions.list]);
+const mapStateToProps = (state) => ({ projects: state.project.list, isLoading: loadingSelector(state) });
 export default connect(
-  state => state.projects,
+  mapStateToProps,
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(ListProject);

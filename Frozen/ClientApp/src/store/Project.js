@@ -1,41 +1,35 @@
-﻿const requestProjectListType = 'REQUEST_PROJECT_LIST';
-const receiveProjectListType = 'RECEIVE_PROJECT_LIST';
+﻿import { actionTypeCreator } from '../helpers';
 
-const requestProjectDetailType = 'REQUEST_PROJECT_DETAIL';
-const receiveProjectDetailType = 'RECEIVE_PROJECT_DETAIL';
 
-const createProjectType = "CREATE_PROJECT";
-
-const initialState = { projects: [], current: null, isLoading: false };
+export const actions = {
+  list: 'LIST_PROJECT',
+  detail: 'DETAIL_PROJECT',
+  create: 'CREATE_PROJECT'
+}
 
 export const actionCreators = {
-  requestProjectList: pageIndex => async (dispatch, getState) => {    
-    if (pageIndex === getState().projects.pageIndex) {
-      // Don't issue a duplicate request (we already have or are loading the requested data)
-      return;
-    }
+  requestProjectList: () => async (dispatch, getState) => {    
+    dispatch({ type: actionTypeCreator.request(actions.list) });
 
-    dispatch({ type: requestProjectListType, pageIndex });
-
-    const url = `api/Project/List?pageIndex=${pageIndex}`;
+    const url = `api/Project/List`;
     const response = await fetch(url);
-    const projects = await response.json();
+    const list = await response.json();
 
-    dispatch({ type: receiveProjectListType, pageIndex, projects });
+    dispatch({ type: actionTypeCreator.success(actions.list), payload: list });
   },
 
   requestProjectDetail: id => async (dispatch, getState) => {
-    dispatch({ type: requestProjectDetailType, id });
+    dispatch({ type: actionTypeCreator.request(actions.detail) });
 
     const url = `api/Project/Detail/${id}`;
     const response = await fetch(url);
     const project = await response.json();
 
-    dispatch({ type: receiveProjectDetailType, id, project });
+    dispatch({ type: actionTypeCreator.success(actions.detail), payload: project });
   },
 
   createProject: data => async (dispatch, getState) => {
-    //dispatch({ type: createProjectType, data });
+    dispatch({ type: actionTypeCreator.request(actions.create), payload: data });
     const url=`api/Project/Create`;
     
     const options = {
@@ -46,51 +40,34 @@ export const actionCreators = {
     const response = await fetch(url, options)
     const project = await response.json();
     
-    dispatch({ type: createProjectType, project});
+    dispatch({ type: actionTypeCreator.success(actions.create), payload: project});
   }
 };
+
+const initialState = { list: [], current: null };
 
 export const reducer = (state, action) => {
   state = state || initialState;
 
-  if (action.type === requestProjectListType) {
+  if (action.type === actionTypeCreator.success(actions.list)) {
     return {
       ...state,
-      pageIndex: action.pageIndex,
-      isLoading: true
+      list: action.payload
     };
   }
 
-  if (action.type === receiveProjectListType) {
+  if (action.type === actionTypeCreator.success(actions.detail)) {
     return {
       ...state,
-      pageIndex: action.pageIndex,
-      projects: action.projects,
-      isLoading: false
-    };
-  }
-
-  if (action.type === requestProjectDetailType) {
-    return {
-      ...state,
-      current: null,
-      isLoading: true
-    };
-  }
-
-  if (action.type === receiveProjectDetailType) {
-    return {
-      ...state,
-      current: action.project,
-      isLoading: false
+      current: action.payload
     }
   }
 
-  if (action.type === createProjectType) {
+  if (action.type === actionTypeCreator.success(actions.create)) {
     if(action.project && action.project.id > 0) {
-      state.projects.push(action.project);
       return {
-        ...state
+        ...state,
+        list: [...state.list, action.payload]
       }
     }
   }

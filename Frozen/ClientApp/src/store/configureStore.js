@@ -4,12 +4,14 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as Counter from './Counter';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Project from './Project';
+import { reducer as loadingReducer } from './Loading';
 
 export default function configureStore(history, initialState) {
   const reducers = {
+    loading: loadingReducer,
     counter: Counter.reducer,
     weatherForecasts: WeatherForecasts.reducer,
-    projects: Project.reducer
+    project: Project.reducer
   };
 
   const middleware = [

@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { createLoadingSelector } from '../store/Loading';
 import { actionCreators } from '../store/Project';
+import { actions as projectActions } from '../store/Project'; 
 
 class ViewProject extends Component {
-
-    constructor(props) {
-        super(props);
-        this.goBack = this.goBack.bind(this);
-    }
 
     componentWillMount() {
       // This method runs when the component is first added to the page
@@ -33,7 +30,7 @@ class ViewProject extends Component {
       );
     }
 
-    goBack(e) {
+    goBack = (e) => {
         this.props.history.goBack();
     }
   }
@@ -54,9 +51,12 @@ class ViewProject extends Component {
       </div>
     );
   }
+
+  const loadingSelector = createLoadingSelector([projectActions.detail]);
+  const mapStateToProps = (state) => ({ current: state.project.current, isLoading: loadingSelector(state) });
   
   export default connect(
-    state => state.projects,
+    mapStateToProps,
     dispatch => bindActionCreators(actionCreators, dispatch)
   )(ViewProject);
 
