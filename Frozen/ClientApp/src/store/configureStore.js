@@ -5,10 +5,12 @@ import * as Counter from './Counter';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Project from './Project';
 import { reducer as loadingReducer } from './Loading';
+import { reducer as errorReducer } from './Error';
 
 export default function configureStore(history, initialState) {
   const reducers = {
     loading: loadingReducer,
+    error: errorReducer,
     counter: Counter.reducer,
     weatherForecasts: WeatherForecasts.reducer,
     project: Project.reducer

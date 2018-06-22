@@ -35,7 +35,7 @@ namespace Frozen.Controllers
         {
             await Task.Delay(2000);
             var result = await _service.GetById(id);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound("the requested proejct was not found.");
 
             return result;
         }

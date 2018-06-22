@@ -23,9 +23,13 @@ export const actionCreators = {
 
     const url = `api/Project/Detail/${id}`;
     const response = await fetch(url);
-    const project = await response.json();
-
-    dispatch({ type: actionTypeCreator.success(actions.detail), payload: project });
+    if(response.status === 200) {
+      const project=await response.json();
+      dispatch({ type: actionTypeCreator.success(actions.detail),payload: project });
+    }
+    else {
+      throw new Error(response.status);
+    }
   },
 
   createProject: data => async (dispatch, getState) => {

@@ -31,7 +31,7 @@ class CreateProject extends Component {
                 self.gotoList();
             },
             function(error) {
-                
+                console.log(error);
             });
     }
 

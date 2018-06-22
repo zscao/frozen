@@ -7,6 +7,7 @@ import FetchData from './components/FetchData';
 import ListProject from './components/ListProject';
 import ViewProject from './components/ViewProject';
 import CreateProject from './components/CreateProject';
+import Error from './components/Error';
 
 export default () => (
   <Layout>
@@ -16,5 +17,6 @@ export default () => (
     <Route path='/project/list:pageIndex?' component={ListProject} />
     <Route path='/project/detail/:id?' component={ViewProject} />
     <Route path='/project/create' component={CreateProject} />
+    <Error />
   </Layout>
 );
