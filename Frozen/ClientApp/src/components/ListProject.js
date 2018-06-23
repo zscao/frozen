@@ -2,9 +2,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { createLoadingSelector } from '../store/Loading';
 import { actionCreators } from '../store/Project';
-import { actions as projectActions } from '../store/Project';
 
 class ListProject extends Component {
   componentWillMount() {
@@ -13,8 +11,8 @@ class ListProject extends Component {
   }
 
   render() {
-    console.log('rendering ListProject...');
-    console.log(this.props);
+    //console.log('rendering ListProject...');
+    //console.log(this.props);
 
     return (
       <div>
@@ -41,7 +39,7 @@ function renderProjectsTable(props) {
         </tr>
       </thead>
       <tbody>
-        {props.projects.map(project =>
+        {props.list.data.map(project =>
           <tr key={project.id}>
             <td>{project.id}</td>
             <td>{project.title}</td>
@@ -61,12 +59,11 @@ function renderPagination(props) {
   return <p className='clearfix text-center'>
     <Link className='btn btn-default pull-left' to={`/list/${prevpageIndex}`}>Previous</Link>
     <Link className='btn btn-default pull-right' to={`/list/${nextpageIndex}`}>Next</Link>
-    {props.isLoading ? <span>Loading...</span> : []}
+    {props.list.isLoading ? <span>Loading...</span> : []}
   </p>;
 }
 
-const loadingSelector = createLoadingSelector([projectActions.list]);
-const mapStateToProps = (state) => ({ projects: state.project.list, isLoading: loadingSelector(state) });
+const mapStateToProps = (state) => ({ list: state.project.list});
 export default connect(
   mapStateToProps,
   dispatch => bindActionCreators(actionCreators, dispatch)
